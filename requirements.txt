@@ -7,7 +7,7 @@ nltk==3.6.2
 pytz==2021.1
 regex==2021.4.4
 scikit-learn==0.24.1
-scipy==1.6.3
+scipy>=1.11
 sklearn==0.0
 sqlparse==0.4.1
 threadpoolctl==2.1.0
