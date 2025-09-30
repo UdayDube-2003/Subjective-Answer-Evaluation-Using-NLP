@@ -1,0 +1,44 @@
+{% extends 'common.html' %}
+{% load static %}
+
+
+{% block main %}
+
+<br><br>
+
+<div class="d-flex justify-content-center">
+	<div class="card" style="width: 75%";>
+	  <div class="card-header">
+			<div class="jumbotron jumbotron-fluid">
+			  <div class="container">
+			    <h1 class="display-4">{{ test }}</h1>
+			    <div class="row">
+			    	<p class="lead col-sm">{{ test.desc }}</p>      
+		        <p class="lead col-sm" align="right">Review Test</p>
+		      </div>
+		        <p class="col-sm" align="right">{{ mark }}</p>
+			  </div>
+			</div>
+			<ul class="nav nav-tabs card-header-tabs">
+	    </ul>
+		</div>
+	  <div class="card-body">
+	  		{% for q in ans  %}
+	  		<br>
+	    	<h5 class="card-title">{{ q.qns }}</h5>
+				<div class="form-group">
+			  	<textarea class="form-control" rows="3" readonly>{{ q.ans }}</textarea>
+				</div>
+				<div class="col-2">
+					<label for="score">Score Obtained</label>
+		      <input id="score" type="test" class="form-control" value="{{ q.ans.actual_score }} / {{q.qns.max_score}}" readonly>
+		    </div>
+				<br>
+				{% endfor %}
+	  </div>
+	</div>
+</div>
+
+<br><br>
+
+{% endblock %}

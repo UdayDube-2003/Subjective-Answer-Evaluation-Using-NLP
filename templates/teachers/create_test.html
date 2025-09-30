@@ -1,0 +1,54 @@
+{% extends 'common.html' %}
+{% load static %}
+
+{% block main %}
+
+<br><br>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container" style="width: 60%; background-image: url('{% static 'assets/img/hero-bg.png' %}');">
+    <div class="container" style="width: 90%">
+      <br>
+
+      {% if test %}
+        <h1 class="display-4">{{ test }}</h1>
+        <p class="lead"> Update Test </p>
+      {% else %}
+        <h1 class="display-4">Create Test</h1>
+        <p class="lead">Create Test here add questions later</p>
+      {% endif %}
+      <form method="POST">
+        {% csrf_token %} 
+        <div class="form-group">
+          <label class="lead" for="id_{{field.name}}">{{ form.name.label }}</label>
+          {{ form.name }}
+        </div>
+        <br>
+        <div class="form-group">
+          <label class="lead" for="id_{{field.desc}}">{{ form.desc.label }}</label>
+          {{ form.desc }}
+        </div>
+        <br>
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label class="lead" for="id_{{field.start_time}}">{{ form.start_time.label }}</label>
+            {{ form.start_time }}
+          </div>
+
+          <div class="col-md-6">
+            <label class="lead" for="id_{{field.end_time}}">{{ form.end_time.label }}</label>
+            {{ form.end_time }}
+          </div> 
+        </div>
+        <br>
+        <br>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+      <br><br>
+    </div>
+  </div>
+</div>
+</div>  
+
+{% endblock %}

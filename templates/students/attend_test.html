@@ -1,0 +1,162 @@
+{% extends 'common.html' %}
+{% load static %}
+
+{% block main %}
+<style>
+	body {
+		background: url('{% static "assets/img/test_bg.jpeg" %}') no-repeat center center fixed;
+		background-size: cover;
+	}
+
+	.card {
+		background: rgba(255, 255, 255, 0.9);
+		border-radius: 15px;
+		box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	textarea {
+		border-radius: 15px;
+		transition: border-color 0.3s;
+	}
+
+	textarea:focus {
+		border-color: lightblue;
+		box-shadow: 0px 0px 5px lightblue;
+	}
+
+	.input-container {
+		position: relative;
+	}
+
+	.input-container textarea {
+		padding-left: 30px;
+	}
+
+	.input-container .icon {
+		position: absolute;
+		left: 10px;
+		top: 10px;
+		color: gray;
+	}
+
+	.timer-container {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		color: red;
+	}
+
+	.submit-btn {
+		display: block;
+		margin: 20px auto;
+		padding: 20px 40px;
+		font-size: 20px;
+		border-radius: 30px;
+		background: linear-gradient(to right, #56ab2f, #a8e063);
+		transition: 0.3s;
+		text-align: center;
+	}
+
+	.submit-btn:hover {
+		background: linear-gradient(to right, #a8e063, #56ab2f);
+	}
+
+	.word-counter {
+		font-size: 12px;
+		color: gray;
+		text-align: right;
+	}
+
+	h1.display-4 {
+		font-weight: bold;
+		color: navy;
+	}
+</style>
+<br><br>
+<div class="d-flex justify-content-center">
+	<div class="card p-4" style="width: 75%" ;>
+		<div class="card-header">
+			<div class="jumbotron jumbotron-fluid">
+				<div class="container">
+					<h1 class="display-4">{{ test }}</h1>
+					<div class="row">
+						<p class="lead col-sm">{{ test.desc }}</p>
+						{% if test.end_time %}
+						<div class="col-sm timer-container">
+							<i class="bi bi-clock-history"></i>
+							<span id="days"> </span>
+							<span id="hours"> </span>
+							<span id="minutes"> </span>
+							<span id="seconds"> </span>
+						</div>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card-body">
+			<form id="myform" method="POST" action="{% url 'submit_test' test.id  %}">
+				{% csrf_token %}
+				{% for q in qns %}
+				<br>
+				<h5 class="card-title">{{q}}</h5>
+				<div class="form-group input-container">
+					<i class="bi bi-pencil icon"></i>
+					<textarea class="form-control" name="{{q.id}}" rows="3" placeholder="Write your answer here..."
+						required></textarea>
+					<div class="word-counter">Word count: <span id="counter-{{q.id}}">0</span></div>
+				</div>
+				<br>
+				{% endfor %}
+				<button type="submit" class="btn btn-primary submit-btn">Submit</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<br><br>
+
+<script>
+	function convertTZ(date, tzString) {
+		return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", { timeZone: tzString }))
+	}
+
+	function makeTimer() {
+		var endTime = new Date({{ test.end_time.timestamp }} * 1000);
+	endTime = (Date.parse(endTime) / 1000);
+
+	var now = new Date();
+	convertTZ(now, "Asia/Kolkata");
+	now = (Date.parse(now) / 1000);
+
+	var timeLeft = endTime - now;
+
+	var days = Math.floor(timeLeft / 86400);
+	var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
+	var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600)) / 60);
+	var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
+
+	if (days < 0) {
+		document.forms.myform.submit();
+	}
+
+	if (hours < 10) { hours = "0" + hours; }
+	if (minutes < 10) { minutes = "0" + minutes; }
+	if (seconds < 10) { seconds = "0" + seconds; }
+
+	document.getElementById("days").innerHTML = days + " Days";
+	document.getElementById("hours").innerHTML = hours + " Hrs";
+	document.getElementById("minutes").innerHTML = minutes + " Min";
+	document.getElementById("seconds").innerHTML = seconds + " Sec";
+    }
+
+	setInterval(makeTimer, 1000);
+
+	document.querySelectorAll("textarea").forEach(textarea => {
+		textarea.addEventListener("input", function () {
+			let wordCount = this.value.trim().split(/\s+/).filter(word => word.length > 0).length;
+			document.getElementById("counter-" + this.name).innerText = wordCount;
+		});
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block main %}
+
+<link href="{% static 'login.css' %}" rel="stylesheet">
+
+<div class="container" id="container">
+	<div class="form-container sign-up-container">
+		<form action="{% url 'signup' %}" method="POST">
+			{% csrf_token %}
+			<h2>Create Account</h2>
+			<input type="text" name="name" placeholder="Name" required="true" autocomplete="off" autocorrect="off"
+				spellcheck="false">
+			<input type="email" name="email" placeholder="Email" autocomplete="off" autocorrect="off"
+				spellcheck="false">
+
+
+			<input type="password" name="password" placeholder="Password" required autocomplete="off" autocorrect="off"
+				spellcheck="false">
+
+			<label> Are You Teacher ? <input type="checkbox" name="is_staff"></label>
+			<button>Sign Up</button>
+		</form>
+	</div>
+	<div class="form-container sign-in-container">
+		<form action="{% url 'login' %}" method="POST">
+			{% csrf_token %}
+			<h1>Sign In</h1>
+			<input type="text" name="name" placeholder="Name" required="true" autocomplete="off" autocorrect="off"
+				spellcheck="false">
+			<input type="email" name="email" placeholder="Email" autocomplete="off" autocorrect="off"
+				spellcheck="false">
+
+
+			<input type="password" name="password" placeholder="Password" required autocomplete="off" autocorrect="off"
+				spellcheck="false">
+			<a href="#">Forgot your password ?</a>
+			<button>Sign In </button>
+		</form>
+	</div>
+
+	<div class="overlay-container">
+		<div class="overlay">
+			<div class="overlay-panel overlay-left">
+				<h1>Welcome Back!</h1>
+				<p>To keep connected with us please login with your personal info</p>
+				<button class="ghost" id="signIn">Sign In</button>
+			</div>
+			<div class="overlay-panel overlay-right">
+				<h1>Hello, There!</h1>
+				<p>Enter your personal details and start journey with us</p>
+				<button class="ghost" id="signUp">Sign Up</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+
+
+{% block custom_js %}
+<script type="text/javascript">
+	const signUpButton = document.getElementById('signUp');
+	const signInButton = document.getElementById('signIn');
+	const container = document.getElementById('container');
+
+	signUpButton?.addEventListener('click', () => {
+		container.classList.add("right-panel-active");
+	});
+
+	signInButton?.addEventListener('click', () => {
+		container.classList.remove("right-panel-active");
+	});
+
+	// Disable email autofill
+	document.addEventListener("DOMContentLoaded", function () {
+		let emailField = document.getElementsByName("email")[0];
+		if (emailField) {
+			emailField.setAttribute("autocomplete", "off");
+			emailField.setAttribute("readonly", "true");
+			setTimeout(() => emailField.removeAttribute("readonly"), 500);
+		}
+	});
+</script>
+
+
+{% endblock %}

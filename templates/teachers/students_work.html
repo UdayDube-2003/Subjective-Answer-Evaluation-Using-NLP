@@ -1,0 +1,115 @@
+{% extends 'common.html' %}
+{% load static %}
+
+{% block main %}
+
+<style type="text/css">
+  .text-left{
+    text-align: left;
+}
+</style>
+
+<br> 
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col bg-light sidebar">
+      <div class="sidebar-sticky">
+
+        <h2 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Attended Students</span>
+          <a class="d-flex align-items-center text-muted" href="#">
+            <span data-feather="plus-circle"></span>
+          </a>
+        </h2>
+
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>ML Score</th>
+              <th>Actual Score</th>
+              <th>Maximum Score</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for s in attended_s %}
+            <tr>
+              <td>{{ s.first_name }}</td>
+              <td>{{ s.ml_score }}</td>
+              <td>{{ s.actual_score }}</td>
+              <td>{{ test.max_score }}</td>
+              <td><a href="{% url 'individual_work' test_id=test.id student_id=s.id %}" style="text-decoration: none;"><i class="bi bi-check2-square"> Verify</i></a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+
+        <br><br>
+				<h2 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Not Attended Students</span>
+          <a class="d-flex align-items-center text-muted" href="#">
+            <span data-feather="plus-circle"></span>
+          </a>
+        </h2>
+
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for s in missed_s %}
+            <tr>
+              <td>{{ s.first_name }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </nav>
+
+    <main role="main" class="col-md-6 ml-sm-auto col-lg-7 px-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">{{ test }}</h1>
+      </div>
+
+      <h2>{{ student.first_name }} Answers</h2>
+      {% for q in ans %}
+        <div id="{{q.qns.max}}">
+          <div class="card">
+            <div class="card-header collapse show" id="{{q.qns.id}}">
+
+              <button class="btn text-left collapsed" data-toggle="collapse" data-target="#{{q.ans.id}}" aria-expanded="false" 
+              aria-controls="{{q.ans.id}}">{{q.qns}}
+              </button>
+              <br>
+              <form style="float: right;" method="post" action="{% url 'update_work' q.qns.id student.id %}">
+                {% csrf_token %}
+                <input class="col" type="number" min="0" max="{{ q.qns.max_score }}" name="actual_score" value="{{q.ans.actual_score}}">/{{ q.qns.max_score }} &nbsp;&nbsp;
+                <input class="btn btn-primary btn-sm" type="submit" value="Submit">
+              </form>
+            </div>
+
+            <div id="{{q.ans.id}}" class="collapse" aria-labelledby="{{q.ans.id}}" data-parent="#accordion">
+              <div class="card-body">
+                {{q.ans}}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+    </main>
+  </div>
+</div>
+
+
+
+{% endblock %}

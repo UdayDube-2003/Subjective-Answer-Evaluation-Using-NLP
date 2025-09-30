@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top">
+  <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+
+    <a href="{% url 'home' %}" class="logo d-flex align-items-center">
+
+      <span> Subjective Answer Evaluation System</span>
+    </a>
+
+    <nav id="navbar" class="navbar">
+      <ul>
+        <li><a class="nav-link scrollto active" href="{% url 'home' %}">Home</a></li>
+
+        {% if user.is_staff %}
+        <!-- <li><button class="btn btn" href="#createClass"><i class="bi bi-folder-plus"></i> Create</button></li> -->
+        <li><a href="{% url 'create_class' %}"><i class="bi bi-folder-plus"> Create Classroom</i></a>
+          {% else %}
+          <!-- <li><button class="btn btn" href="#joinClass"><i class="bi bi-folder-plus"></i> Join</button></li> -->
+        <li><a href="{% url 'join_class' %}"><i class="bi bi-folder-plus"><span> Join Classroom</span></i></a>
+          {% endif %}
+
+        <li class="dropdown"><a href="#"><span>{{ user.first_name }}</span><i class="bi bi-person-circle"></i></a>
+          <ul>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li><a href="{% url 'home' %}#about">About us</a></li>
+            <li><a href="{% url 'home' %}#contact">Contact us</a></li>
+            <!-- <li><a href="#">Settings</a></li> -->
+          </ul>
+        </li>
+      </ul>
+      <i class="bi bi-list mobile-nav-toggle"></i>
+    </nav><!-- .navbar -->
+
+  </div>
+</header>
+<!-- End Header -->
+{% endblock %}
+
+{% block main %}
+
+<!-- ======= Services Section ======= -->
+<section id="services" class="services">
+
+  <div class="container" data-aos="fade-up">
+
+    <header class="section-header">
+      <br><br>
+      <h2>Classroom</h2>
+      <br><br>
+      <p> Your Classrooms are here</p>
+      <br><br>
+    </header>
+
+    <div class="row gy-4">
+
+      {% for r in rooms %}
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ r.delay }}">
+        <a href="{% url 'view_class' r.id  %}">
+          <div class="service-box {{ r.color }}">
+            <i class="ri-discuss-line icon"></i>
+            <h3> {{r.name}} </h3>
+            <p> {{r.desc}} </p>
+            <a href="#" class="read-more"></a>
+          </div>
+        </a>
+      </div>
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+</section><!-- End Services Section -->
+
+
+{% endblock %}

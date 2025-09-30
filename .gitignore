@@ -1,0 +1,6 @@
+*/*.pyc
+**/*.pyc
+.git/
+env/
+*.pyc
+staticfiles/

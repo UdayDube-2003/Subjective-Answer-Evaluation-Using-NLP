@@ -1,0 +1,51 @@
+{% extends 'common.html' %}
+{% load static %}
+
+{% block main %}
+
+<style type="text/css">
+	h1{
+		color: #5c95e6;
+	}
+</style>
+
+<br><br>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container" style="width: 60%; background-image: url('{% static 'assets/img/hero-bg.png' %}');">
+  	<div class="container" style="width: 90%">
+	    <h1 class="display-4">People</h1>
+	    <p class="lead">Teachers and Students in this Classroom</p>
+	    <br><h1> Teacher </h1><hr/>
+			<div class="container">
+				<div class="row">
+					<div class="col-sm">	
+						<h5>{{ teacher.first_name }}</h5>
+					</div>
+					<div class="col-sm">	
+						<h5>{{ teacher }}</h5>
+					</div>
+				</div>
+			</div>
+			<br><br><br><h1> Students </h1><hr/>
+			<ul class="list-group">
+			  {% for s in student %}
+			  	<li class="list-group-item">
+						<div class="container">
+							<div class="row">
+								<div class="col-sm">	
+									<h6>{{ s.first_name }}</h6>
+								</div>
+								<div class="col-sm">	
+									<h6>{{ s }}</h6>
+								</div>
+							</div>
+						</div>
+			  	</li>
+				{% endfor %}
+			</ul><br><br>
+  	</div>
+  </div>
+</div>
+<br><br>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'common.html' %}
+
+{% load static %}
+
+{% block main %}
+
+<br><br>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container" style="width: 60%; background-image: url('{% static 'assets/img/hero-bg.png' %}');">
+  	<div class="container" style="width: 90%">
+  		<br>
+	    <h1 class="display-4">{{ user.first_name }} Profile</h1>
+	    <p class="lead">Edit Your Informations</p>
+
+	    <form method="POST" action="{% url 'profile' %}">
+				{% csrf_token %} 
+			  <div class="form-group">
+			    <label for="id_{{field.email}}">{{ form.email.label }}</label>
+			    {{ form.email }}
+			    <small id="id_{{field.email}}" class="form-text text-muted">We'll never share your email with anyone else.</small>
+			  </div>
+			  <br>
+			  <div class="form-group">
+			    <label for="id_{{field.first_name}}">{{ form.first_name.label }}</label>
+			    {{ form.first_name }}
+			  </div>
+			  <br>
+			 	<div class="form-group">
+			    <label for="id_{{field.username}}">{{ form.username.label }}</label>
+			    {{ form.username }}
+			  </div>
+			  <br>
+
+			<div class="button-group row">
+					<button type="submit" class="btn btn-primary">Submit</button>
+		    	<a href="{% url 'password' %}" class="btn btn-link" role="button">
+		      Reset Password </a>
+			</div>
+
+			</form>
+
+
+			<br><br>
+	  </div>
+	</div>
+</div>
+
+
+</div>
+
+
+
+{% endblock %}

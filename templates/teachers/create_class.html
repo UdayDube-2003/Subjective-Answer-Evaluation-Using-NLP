@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+	<!-- ======= Header ======= -->
+	<header id="header" class="header fixed-top">
+	  <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+	    <nav id="navbar" class="navbar">
+	      <i class="bi bi-list mobile-nav-toggle"></i>
+	    </nav><!-- .navbar -->
+	  </div>
+	</header>
+	<!-- End Header -->
+{% endblock %}
+
+{% block main %}
+	
+	<!-- ======= Contact Section ======= -->
+    <section id="contact" class="contact" style="background-image: url('{% static 'assets/img/hero-bg.png' %}');">
+
+      <div class="container" data-aos="fade-up">
+
+        <header class="section-header">
+          {% if room %}
+            <p>{{room}}</p>
+            <h2>Update Classroom</h2> 
+          {% else %}
+            <h2>Create</h2>
+            <p>Create Classroom</p>
+          {% endif %}
+        </header>
+
+        <div class="row gy-4">
+
+        	<!-- Form -->
+          <div class="col-lg-6">
+            <form  method="post" class="php-email-form">
+            	{% csrf_token %}
+              <div class="row gy-4">
+
+                <div class="col-md-12">
+                  {{ form.name }}
+                </div>
+
+                <div class="col-md-12">
+                  {{ form.code }}
+                  <small id="emailHelp" class="form-text text-muted">This code is used by students to join your Class</small>
+                </div>
+
+                <div class="col-md-12">
+                  {{ form.desc }}
+                </div>
+
+                <div class="col-md-12 text-center">
+                  <button type="submit">Submit</button>
+                </div>
+
+              </div>
+            </form>
+          </div>
+          <!-- End From -->
+
+          <!-- Extra content -->
+         	<div class="col-lg-6">
+            <div class="row gy-4">
+              <div class="col-md-6">
+              	<img src="{% static 'assets/img/OnlineClass.jpg' %}">
+              </div>
+            </div>
+          </div>
+
+          <!-- End of Extra Content -->
+        </div>
+
+      </div>
+    </section>
+    <!-- End Contact Section -->
+{% endblock %}

@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top">
+  <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+    <a href="{% url 'home' %}" class="logo d-flex align-items-center">
+      <img src="{% static 'assets/img/logo.png' %}" alt="">
+      <br> <br>
+      <span> EasyExam </span>
+      <br> <br>
+    </a>
+
+    <nav id="navbar" class="navbar">
+      <ul>
+        <li><a class="nav-link scrollto active" href="{% url 'dashboard' %}">Home</a></li>
+
+        {% if user.is_staff %}
+          <li><a href="{% url 'create_test' room.id %}" class="nav-link"><i class="bi bi-folder-plus"></i><span> Create Test</span></a></li>
+          <!-- Submit Question Paper link -->
+          <li><a href="javascript:void(0);" class="nav-link" data-bs-toggle="modal" data-bs-target="#uploadModal"><i class="bi bi-pin"></i><span> Submit Question Paper</span></a></li>
+
+          <li><a href="{% url 'update_class' room.id %}" class="nav-link"><i class="bi bi-gear"></i><span> Modify Classroom </span></a></li>
+        {% endif %}
+
+        <li class="dropdown"><a href="#"><span>{{ user.first_name }}</span><i class="bi bi-person-circle"></i></a>
+          <ul>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li><a>Class Code : {{ room.code }}</a></li>
+            <li><a href="{% url 'people' room.id  %}">People</a></li>
+            {% if user.is_staff %}
+            <li><a class="confirm-delete" href="{% url 'delete_class' room.id  %}" style="color: red">Delete {{ room }}<i class="bi bi-trash"></i></a></li>
+            {% endif %}
+          </ul>
+        </li>
+      </ul>
+      <i class="bi bi-list mobile-nav-toggle"></i>
+    </nav><!-- .navbar -->
+  </div>
+</header>
+<!-- End Header -->
+{% endblock %}
+
+{% block main %}
+	
+<main id="main">
+
+  <!-- ======= Breadcrumbs ======= -->
+  <section class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <br>
+        <li><a href="{% url 'dashboard' %}">Classroom</a></li>
+        <li>{{ room }}</li>
+      </ol>
+    </div>
+  </section><!-- End Breadcrumbs -->
+
+  <!-- ======= Blog Section ======= -->
+  <section id="blog" class="blog">
+    <div class="container" data-aos="fade-up">
+
+      <div class="row">
+
+        <div class="col-lg-8 entries">
+
+          {% for t in tests %}
+          <article class="entry">
+            {% if user.is_staff %}
+            <h2 class="entry-title">
+              <a href="{% url 'view_test' t.id %}">{{ t }}</a>
+            </h2>
+            {% elif t.status == "late" or t.status == "not" %}
+            <h2 class="entry-title">
+              <a>{{ t }}</a>
+            </h2>
+            {% else %}
+            <h2 class="entry-title">
+              <a href="{% url 'attend_test' t.id %}">{{ t }}</a>
+            </h2>
+            {% endif %}
+            <div class="entry-content">
+              <p>{{ t.desc }}</p>
+              {% if t.status == "Assigned" %}
+              <p style="color: green;">Assigned</p>
+              {% endif %}
+              {% if t.status == "late" %}
+              <p style="color: red;">Time Out</p>
+              {% endif %}
+              {% if t.status == "not" %}
+              <p style="color: #dbed3b;">Not yet started</p>
+              {% endif %}
+              {% if t.status == "done" %}
+              <p style="color: green;">Completed</p>
+              {% endif %}
+            </div>
+
+            <div class="entry-meta">
+              <ul>
+                {% if t.start_time %}
+                <li class="d-flex align-items-center"><i class="bi bi-alarm"></i> Start time : {{ t.start_time }}</li>
+                {% endif %}
+                {% if t.end_time %}
+                <li class="d-flex align-items-center"><i class="bi bi-clock-history"></i> End Time : {{ t.end_time }}</li>
+                {% endif %}
+              </ul>
+            </div>
+
+          </article><!-- End blog entry -->
+          {% endfor %}
+
+          {% if tests.has_other_pages %}
+          <div class="blog-pagination">
+            <ul class="justify-content-center">
+              {% if tests.has_previous %}
+              <li><a href="?page={{ tests.previous_page_number }}">&laquo;</a></li>
+              {% endif %}
+              {% for i in tests.paginator.page_range %}
+                {% if tests.number == i %}
+                  <li class="active"><a>{{ i }}</a></li>
+                {% else %}
+                  <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+              {% if tests.has_next %}
+              <li><a href="?page={{ tests.next_page_number }}">&raquo;</a></li>
+              {% endif %}
+            </ul>
+          </div>
+          {% endif %}
+
+        </div><!-- End blog entries list -->
+
+        <div class="col-lg-4">
+
+          <div class="sidebar">
+            <h3 class="sidebar-title">Search</h3>
+            <div class="sidebar-item search-form">
+              <form action="" method="GET">
+                <input type="text" name="search" placeholder="Search">
+                <button type="submit"><i class="bi bi-search"></i></button>
+              </form>
+            </div><!-- End sidebar search form -->
+
+            {% if user.is_staff %}
+            {% else %}
+            <h3 class="sidebar-title">Categories</h3>
+            <div class="sidebar-item categories">
+              <ul>
+                <li><a href="{% url 'view_class' room.id %}">All</a></li>
+                <li><a href="{% url 'assigned_test' room.id %}">Assigned</a></li>
+                <li><a href="{% url 'missing_test' room.id %}">Missing</a></li>
+                <li><a href="{% url 'done_test' room.id %}">Done</a></li>
+              </ul>
+            </div><!-- End sidebar categories-->
+            {% endif %}
+
+          </div><!-- End sidebar -->
+
+        </div><!-- End blog sidebar -->
+
+      </div>
+
+    </div>
+  </section><!-- End Blog Section -->
+
+</main><!-- End #main -->
+
+<!-- Modal for File Upload -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadModalLabel">Upload Question Paper</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST" enctype="multipart/form-data" action="{% url 'submit_question_paper' room.id %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="test_id" class="form-label">Select Test</label>
+            <select class="form-control" id="test_id" name="test_id" required>
+              {% for test in tests %}
+                <option value="{{ test.id }}">{{ test.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="file" class="form-label">Choose a file</label>
+            <input class="form-control" type="file" id="file" name="file" required>
+          </div>
+          <div class="mb-3">
+            <!-- Download Excel Template inside the modal -->
+            <a href="{% url 'download_excel_template' %}" class="btn btn-success">
+              <i class="bi bi-download"></i> Download Excel Template
+            </a>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Upload</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
